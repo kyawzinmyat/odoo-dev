@@ -64,6 +64,16 @@ class EstateProperty(models.Model):
             self.garden_area = 10
             self.garden_orientation = 'option1'
     
+    # override
+    @api.ondelete(at_uninstall=True)
+    def filter_delete(self):
+        for record in self:
+            if record.state != 'option1' and record.state != 'option5':
+                raise ValidationError("You can only delete state with new or cancled")
+
+   
+
+
     def sold_property(self):
         for record in self:
             if record.state[-1] != '4' and record.state[-1] != '5':
@@ -142,3 +152,11 @@ class PropertyOffers(models.Model):
         for record in self:
             if not record.status or record.status[-1] != '1':
                 record.status = 'option2'
+    #override   
+    @api.model
+    def create(self, vals):
+        if vals['price'] < max_price:
+            raise ValidationError("Price need to be at least ", max_price)
+
+        self.env['estate.property'].browse(vals['property_id']).state = 'option2'
+        return super(PropertyOffers, self).create(vals)
