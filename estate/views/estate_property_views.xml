@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- action for properties inner menu-->
+    <record id="estate_property_action" model="ir.actions.act_window">
+        <field name="name">Estate</field>
+        <field name = "res_model">estate.property</field>
+        <field name = "view_mode">tree,form</field>
+    </record>
+
+    <!-- tree view -->
+    <record id="estate_property_view_tree" model="ir.ui.view">
+        <field name="name">Properites Tree View</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <tree  decoration-success = "state=='option3' or state =='option2'" decoration-muted = "state=='option4'" decoration-bf = "state=='option3'">
+                <field name = "state" optional = "hide"/>
+                <field name = "name" string = "Title"/>
+                <field name = "postcode" string = "Postcode"/>
+                <field name = "bedrooms" string = "Bedromms"/>
+                <field name = "living_area" string = "Living Area"/>
+                <field name = "expected_price" string = "Expected Price"/>
+                <field name = "selling_price" string = "Selling Price"/>
+                <field name = "date_availability" string = "Avaliable From" optional = 'hide'/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- form view -->
+    <record id="estate_property_view_form" model="ir.ui.view">
+        <field name="name">Properties Form View</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <header>
+                    <button name="sold_property" attrs = "{'invisible': [ 
+                    '|', ('state', '==', 'option5'), ('state', '==', 'option4')
+                            ]}" type="object" string="Sold"/>
+                    <button name="cancle_property" attrs = "{'invisible': [ 
+                    '|', ('state', '==', 'option5'), ('state', '==', 'option4')
+                    ]}" type="object" string="Cancle"/>
+                </header>
+                <!-- body -->
+                <sheet>
+                    <h1><field name = "name"/></h1>
+                    <h3>
+                        <field name="property_tags_ids" widget = "many2many_tags" options="{'color_field': 'color'}"></field>
+                        <group col = "2" row = "1">
+                            <group>
+                                <field name="state"></field>
+                            </group>
+                            <group>
+                                <field name="expected_price">Expected Price</field>
+                            </group>
+                        </group>
+                        <group col = "2" row = "1">
+                            <group>
+                                <field name="property_type_id" options="{'no_create': True, 'no_open': True}">Property Type</field>
+                            </group>
+                            <group>
+                                <field name="postcode">Postcode</field>
+                            </group>
+                        </group>
+                        <group col = '2'>
+                            <group>
+                                <field name="selling_price">Selling Price</field>
+                            </group>
+                            <group>
+                                <field name="best_offer">Best Offer</field>
+                            </group>
+                        </group>
+                        <group col = "2" row = "1">
+                            <group>
+                                <field name="date_availability">Avaliable From</field>
+                            </group>                            
+                        </group>
+                    </h3>
+                </sheet>
+                <!-- footer -->
+                <notebook>
+                        <page string="Description">
+                            <sheet>
+                                <group string="">
+                                    <field name="description"></field>
+                                    <field name = "bedrooms"/>
+                                    <field name = "living_area"></field>
+                                    <field name = "facades"/> 
+                                    <field name = "garage"/>
+                                    <field name = "garden"/>
+                                    <field name = "garden_area" attrs = "{
+                                        'invisible' : [('garden', '==', False)]
+                                    }"/>
+                                    <field name = "garden_orientation" attrs = "{
+                                        'invisible' : [('garden', '==', False)]
+                                    }"/>
+                                    <field name = "total_area"></field>
+                                </group>    
+                            </sheet>
+                        </page>     
+                        <page string="Other Info">
+                            <sheet>
+                                <group string="">
+                                    <field name="seller_id">Salesman</field>
+                                    <field name="buyer_id">Buyer</field>
+                                </group>   
+                            </sheet> 
+                        </page>   
+                        <page string="Offers">  
+                            <sheet>
+                                <group string = "">
+                                    <field name="offer_ids" attrs = "{
+                                        'readonly' : ['&amp;', ('state', '!=', 'option1'), ('state', '!=', 'option2')]
+                                    }"/>
+                                </group>   
+                            </sheet> 
+                        </page>               
+                </notebook>
+                
+            </form>
+        </field>
+    </record>
+
+    <!-- search -->
+    <record id="estae_property_view_search" model="ir.ui.view">
+        <field name="name">Properties Search View</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search string="New or Offer Received">
+                <field name="name"></field>
+                <field name = "state"></field>
+                <filter name="state" string="State" domain="['|', ('state', '=', 'option1'), ('state', '=', 'option2')]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- _____________________________________ -->
+
+
+    <!-- action for property type inner menu-->
+    <record id="estate_property_type_action" model="ir.actions.act_window">
+        <field name="name">Property Type</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">tree,form</field>         
+    </record>
+
+    <!-- tree view -->
+    <record id="estate_property_type_view_tree" model="ir.ui.view">
+        <field name="name">Type view tree</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name = "sequence" widget="handle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- form view for type-->
+    <record id="estate_property_type_view_form" model="ir.ui.view">
+        <field name="name">Type form view</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <header>
+                    <group><field name="name"></field></group>
+                    <button class="oe_stat_button" 
+                    type="action" 
+                    name="%(estate.property_offer_action)d" icon="fa-money"><field name = "offer_count"/></button>
+                </header>
+                <sheet>
+                    <notebook>
+                        <page name="Properties">
+                            <field name="property_ids">
+                                <tree>
+                                    <field name="name">Title</field>
+                                    <field name = "state" widget = "statusbar">Status</field>
+                                    <field name = "expected_price"></field>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- action for property tags inner menu-->
+    <record id="estate_property_tags_action" model="ir.actions.act_window">
+        <field name="name">Property Tags</field>
+        <field name="res_model">estate.property.tags</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- tree view for tags menu-->
+    <record id="estate_property_tags_view_tree" model="ir.ui.view">
+        <field name="name">estate.property.tags.view.tree</field>
+        <field name="model">estate.property.tags</field>
+        <field name="arch" type="xml">
+            <tree string="" editable = 'bottom'>
+                <field name="name"></field>
+            </tree>
+        </field>
+    </record>
+
+    <!-- form view for tags menu-->
+    <record id="estate_property_tags_view_form" model="ir.ui.view">
+        <field name="name">Property Tags</field>
+        <field name="model">estate.property.tags</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <field name="name"></field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- action for offers-->
+    <record id="property_offer_action" model="ir.actions.act_window">
+        <field name="name">property_offer_action</field>
+        <field name="res_model">estate.property.offer</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- tree view for offers -->
+    <record id="estate_property_offer_view_tree" model="ir.ui.view">
+        <field name="name">Offer tree view</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <tree string="" editable = "bottom" decoration-success="status=='option1'" decoration-danger = "status == 'option2'">
+                <field name="price"></field>
+                <field name = "status" optional = 'hide'></field>
+                <button name = "accept_offer" attrs = "{
+                    'invisible' : [('status', '!=', '')]
+                }" type="object" icon="fa-check"/>
+                <button name = "refuse_offer" attrs = "{
+                    'invisible' : [('status', '!=', '')]
+                }" type="object" icon="fa-times"/>
+                <field name = "partner_id"></field>
+                <field name = "property_type_id"></field>
+            </tree>
+        </field>
+    </record>
+
+    <!-- form view for offers -->
+    <record id="estate_property_offer_view_form" model="ir.ui.view">
+        <field name="name">Offers form view</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <field name="price"></field>
+                        <field name="status"></field>
+                        <field name="partner_id"></field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- root menu -->
+    <menuitem
+    id="estate_property_root_menu"
+    name="Real Estate"/>
+
+    <!-- sub menu Advertisement -->
+    <menuitem
+        id="advertisements_menu"
+        name="Advertisements"
+        parent="estate_property_root_menu"/>
+    
+    <!-- sub menu property type -->
+    <menuitem
+        id="settings_menu"
+        name = "Settings"
+        parent="estate_property_root_menu"/>
+    
+    <!-- inner menu Properties -->
+    <menuitem
+        id="properties_menu"
+        name="Properties"
+        parent="advertisements_menu"
+        action = "estate_property_action"/>
+
+    <!-- inner menu Settings-->
+    <menuitem
+        id="property_type_menu"
+        name="Property Type"
+        action="estate_property_type_action"
+        parent="settings_menu"/>
+    
+    <menuitem
+        id="property_tags_menu"
+        name="Property Tags"
+        action="estate_property_tags_action"
+        parent="settings_menu"/>
+</odoo>
