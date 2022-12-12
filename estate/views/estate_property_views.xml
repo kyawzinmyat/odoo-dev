@@ -3,24 +3,56 @@
     <!-- action for properties inner menu-->
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">Estate</field>
-        <field name = "res_model">estate.property</field>
-        <field name = "view_mode">tree,form</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">tree,form,kanban</field>
     </record>
+
+    <!-- kanban view for estate property -->
+    <record id="model_name_view_kanban" model="ir.ui.view">
+        <field name="name">model_name.view.kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by = "property_type_id">
+                <field name = "best_offer" />
+                <field name = "selling_price"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <group>                  
+                            <div class="oe_kanban_global_click">
+                                <p>
+                                    <field name="name"/>
+                                </p>
+                            </div>
+                            <div t-if = "record.best_offer.raw_value > 0">
+                                <p>Best Offer : <field name = "best_offer" /></p>
+                            </div>
+                            <div t-if = "record.selling_price.raw_value > 0">                              
+                                <p>Selling Price : <field name = "selling_price" /></p>                             
+                            </div>
+                            <p>Expected Price : <field name = "expected_price"/></p>
+                            <field name = "property_tags_ids"/>
+                        </group>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
 
     <!-- tree view -->
     <record id="estate_property_view_tree" model="ir.ui.view">
         <field name="name">Properites Tree View</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <tree  decoration-success = "state=='option3' or state =='option2'" decoration-muted = "state=='option4'" decoration-bf = "state=='option3'">
-                <field name = "state" optional = "hide"/>
-                <field name = "name" string = "Title"/>
-                <field name = "postcode" string = "Postcode"/>
-                <field name = "bedrooms" string = "Bedromms"/>
-                <field name = "living_area" string = "Living Area"/>
-                <field name = "expected_price" string = "Expected Price"/>
-                <field name = "selling_price" string = "Selling Price"/>
-                <field name = "date_availability" string = "Avaliable From" optional = 'hide'/>
+            <tree decoration-success="state=='option3' or state =='option2'" decoration-muted="state=='option4'" decoration-bf="state=='option3'">
+                <field name="state"/>
+                <field name="name"/>
+                <field name="postcode"/>
+                <field name="bedrooms"  />
+                <field name="living_area" />
+                <field name="expected_price" />
+                <field name="selling_price"  />
+                <field name="date_availability" optional='hide' />
             </tree>
         </field>
     </record>
@@ -32,19 +64,21 @@
         <field name="arch" type="xml">
             <form string="">
                 <header>
-                    <button name="sold_property" attrs = "{'invisible': [ 
+                    <button name="sold_property" attrs="{'invisible': [ 
                     '|', ('state', '==', 'option5'), ('state', '==', 'option4')
-                            ]}" type="object" string="Sold"/>
-                    <button name="cancle_property" attrs = "{'invisible': [ 
+                            ]}" type="object" string="Sold" />
+                    <button name="cancle_property" attrs="{'invisible': [ 
                     '|', ('state', '==', 'option5'), ('state', '==', 'option4')
-                    ]}" type="object" string="Cancle"/>
+                    ]}" type="object" string="Cancle" />
                 </header>
                 <!-- body -->
                 <sheet>
-                    <h1><field name = "name"/></h1>
+                    <h1>
+                        <field name="name" />
+                    </h1>
                     <h3>
-                        <field name="property_tags_ids" widget = "many2many_tags" options="{'color_field': 'color'}"></field>
-                        <group col = "2" row = "1">
+                        <field name="property_tags_ids" widget="many2many_tags" options="{'color_field': 'color'}"></field>
+                        <group col="2" row="1">
                             <group>
                                 <field name="state"></field>
                             </group>
@@ -52,7 +86,7 @@
                                 <field name="expected_price">Expected Price</field>
                             </group>
                         </group>
-                        <group col = "2" row = "1">
+                        <group col="2" row="1">
                             <group>
                                 <field name="property_type_id" options="{'no_create': True, 'no_open': True}">Property Type</field>
                             </group>
@@ -60,7 +94,7 @@
                                 <field name="postcode">Postcode</field>
                             </group>
                         </group>
-                        <group col = '2'>
+                        <group col='2'>
                             <group>
                                 <field name="selling_price">Selling Price</field>
                             </group>
@@ -68,53 +102,53 @@
                                 <field name="best_offer">Best Offer</field>
                             </group>
                         </group>
-                        <group col = "2" row = "1">
+                        <group col="2" row="1">
                             <group>
                                 <field name="date_availability">Avaliable From</field>
-                            </group>                            
+                            </group>
                         </group>
                     </h3>
                 </sheet>
                 <!-- footer -->
                 <notebook>
-                        <page string="Description">
-                            <sheet>
-                                <group string="">
-                                    <field name="description"></field>
-                                    <field name = "bedrooms"/>
-                                    <field name = "living_area"></field>
-                                    <field name = "facades"/> 
-                                    <field name = "garage"/>
-                                    <field name = "garden"/>
-                                    <field name = "garden_area" attrs = "{
+                    <page string="Description">
+                        <sheet>
+                            <group string="">
+                                <field name="description"></field>
+                                <field name="bedrooms" />
+                                <field name="living_area"></field>
+                                <field name="facades" />
+                                <field name="garage" />
+                                <field name="garden" />
+                                <field name="garden_area" attrs="{
                                         'invisible' : [('garden', '==', False)]
-                                    }"/>
-                                    <field name = "garden_orientation" attrs = "{
+                                    }" />
+                                <field name="garden_orientation" attrs="{
                                         'invisible' : [('garden', '==', False)]
-                                    }"/>
-                                    <field name = "total_area"></field>
-                                </group>    
-                            </sheet>
-                        </page>     
-                        <page string="Other Info">
-                            <sheet>
-                                <group string="">
-                                    <field name="seller_id">Salesman</field>
-                                    <field name="buyer_id">Buyer</field>
-                                </group>   
-                            </sheet> 
-                        </page>   
-                        <page string="Offers">  
-                            <sheet>
-                                <group string = "">
-                                    <field name="offer_ids" attrs = "{
-                                        'readonly' : ['&amp;', ('state', '!=', 'option1'), ('state', '!=', 'option2')]
-                                    }"/>
-                                </group>   
-                            </sheet> 
-                        </page>               
+                                    }" />
+                                <field name="total_area"></field>
+                            </group>
+                        </sheet>
+                    </page>
+                    <page string="Other Info">
+                        <sheet>
+                            <group string="">
+                                <field name="seller_id">Salesman</field>
+                                <field name="buyer_id">Buyer</field>
+                            </group>
+                        </sheet>
+                    </page>
+                    <page string="Offers">
+                        <sheet>
+                            <group string="">
+                                <field name="offer_ids" attrs="{
+                                    'readonly' : ['&amp;', ('state', '!=', 'option1'), ('state', '!=', 'option2')]
+                                }" />
+                            </group>
+                        </sheet>
+                    </page>
                 </notebook>
-                
+
             </form>
         </field>
     </record>
@@ -126,8 +160,8 @@
         <field name="arch" type="xml">
             <search string="New or Offer Received">
                 <field name="name"></field>
-                <field name = "state"></field>
-                <filter name="state" string="State" domain="['|', ('state', '=', 'option1'), ('state', '=', 'option2')]"/>
+                <field name="state"></field>
+                <filter name="state" string="State" domain="['|', ('state', '=', 'option1'), ('state', '=', 'option2')]" />
             </search>
         </field>
     </record>
@@ -139,7 +173,7 @@
     <record id="estate_property_type_action" model="ir.actions.act_window">
         <field name="name">Property Type</field>
         <field name="res_model">estate.property.type</field>
-        <field name="view_mode">tree,form</field>         
+        <field name="view_mode">tree,form</field>
     </record>
 
     <!-- tree view -->
@@ -148,8 +182,8 @@
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name"/>
-                <field name = "sequence" widget="handle"/>
+                <field name="name" />
+                <field name="sequence" widget="handle" />
             </tree>
         </field>
     </record>
@@ -160,17 +194,24 @@
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
             <form string="">
-                <header>
-                    <group><field name="name"></field></group>
-                </header>
+
+                    <button name="%(property_offer_action)d" type="action" 
+                        class="oe_right oe_stat_button" icon="fa-money">
+                        <field name="offer_count" />
+                    </button>
+
+                    <h1>
+                        <field name="name" />
+                    </h1>
+
                 <sheet>
                     <notebook>
                         <page name="Properties">
                             <field name="property_ids">
                                 <tree>
-                                    <field name="name">Title</field>
-                                    <field name = "state" widget = "statusbar">Status</field>
-                                    <field name = "expected_price"></field>
+                                    <field name="name"></field>
+                                    <field name="state" widget="statusbar">Status</field>
+                                    <field name="expected_price"></field>
                                 </tree>
                             </field>
                         </page>
@@ -179,7 +220,7 @@
             </form>
         </field>
     </record>
-    
+
     <!-- action for property tags inner menu-->
     <record id="estate_property_tags_action" model="ir.actions.act_window">
         <field name="name">Property Tags</field>
@@ -192,7 +233,7 @@
         <field name="name">estate.property.tags.view.tree</field>
         <field name="model">estate.property.tags</field>
         <field name="arch" type="xml">
-            <tree string="" editable = 'bottom'>
+            <tree string="" editable='bottom'>
                 <field name="name"></field>
             </tree>
         </field>
@@ -217,7 +258,8 @@
     <record id="property_offer_action" model="ir.actions.act_window">
         <field name="name">property_offer_action</field>
         <field name="res_model">estate.property.offer</field>
-        <field name="view_mode">tree,form</field>
+        <field name="domain">[('property_type_id', '=', active_id)]</field>
+        <field name="view_mode">tree</field>
     </record>
 
     <!-- tree view for offers -->
@@ -225,17 +267,19 @@
         <field name="name">Offer tree view</field>
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
-            <tree string="" editable = "bottom" decoration-success="status=='option1'" decoration-danger = "status == 'option2'">
+            <tree string="" editable="bottom" decoration-success="status=='option1'" 
+                decoration-danger="status == 'option2'">
                 <field name="price"></field>
-                <field name = "status" optional = 'hide'></field>
-                <button name = "accept_offer" attrs = "{
-                    'invisible' : [('status', '!=', '')]
-                }" type="object" icon="fa-check"/>
-                <button name = "refuse_offer" attrs = "{
-                    'invisible' : [('status', '!=', '')]
-                }" type="object" icon="fa-times"/>
-                <field name = "partner_id"></field>
-                <field name = "property_type_id"></field>
+                <field name="status" optional = "hide"></field>
+                <button name="accept_offer" attrs="{
+                    'invisible' : ['|', ('status', '==', 'option1'), ('status', '==', 'option2')]
+                }" type="object" icon="fa-check" />
+                <button name="refuse_offer" attrs="{
+                    'invisible' : ['|', ('status', '==', 'option1'), ('status', '==', 'option2')]
+                }" type="object" icon="fa-times" />
+
+                <field name="partner_id"></field>
+                <field name="property_type_id"></field>
             </tree>
         </field>
     </record>
@@ -256,41 +300,54 @@
             </form>
         </field>
     </record>
-    
+
+    <!-- view for Users-->
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.gamification</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <group>
+                <field name="property_ids"></field>
+            </group>
+        </field>
+    </record>
+
+
     <!-- root menu -->
     <menuitem
-    id="estate_property_root_menu"
-    name="Real Estate"/>
+        id="estate_property_root_menu"
+        name="Real Estate" />
 
     <!-- sub menu Advertisement -->
     <menuitem
         id="advertisements_menu"
         name="Advertisements"
-        parent="estate_property_root_menu"/>
-    
+        parent="estate_property_root_menu" />
+
     <!-- sub menu property type -->
     <menuitem
         id="settings_menu"
-        name = "Settings"
-        parent="estate_property_root_menu"/>
-    
+        name="Settings"
+        parent="estate_property_root_menu" />
+
     <!-- inner menu Properties -->
     <menuitem
         id="properties_menu"
         name="Properties"
         parent="advertisements_menu"
-        action = "estate_property_action"/>
+        action="estate_property_action" />
 
     <!-- inner menu Settings-->
     <menuitem
         id="property_type_menu"
         name="Property Type"
         action="estate_property_type_action"
-        parent="settings_menu"/>
-    
+        parent="settings_menu" />
+
     <menuitem
         id="property_tags_menu"
         name="Property Tags"
         action="estate_property_tags_action"
-        parent="settings_menu"/>
+        parent="settings_menu" />
 </odoo>

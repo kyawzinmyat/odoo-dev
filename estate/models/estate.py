@@ -104,11 +104,9 @@ class PropertyType(models.Model):
     def _compute_offer_count(self):
         for record in self:
             record.offer_count = len(record.offer_ids)
-            print(len(record.offer_ids))
     
 
-    def test():
-        pass
+
 
 class PropertyTags(models.Model):
     _name = "estate.property.tags"
@@ -143,8 +141,9 @@ class PropertyOffers(models.Model):
 
     def accept_offer(self):
         for record in self:
-            if not record.status and not record.property_id.buyer_id:
+            if not record.property_id.buyer_id:
                 record.status = 'option1'
+                record.property_id.state = 'option3'
                 record.property_id.selling_price = record.price
                 record.property_id.buyer_id = record.partner_id
 
@@ -152,11 +151,17 @@ class PropertyOffers(models.Model):
         for record in self:
             if not record.status or record.status[-1] != '1':
                 record.status = 'option2'
+    
+    
     #override   
     @api.model
     def create(self, vals):
-        if vals['price'] < max_price:
-            raise ValidationError("Price need to be at least ", max_price)
+        #if vals['price'] < max_price:
+        #    raise ValidationError("Price need to be at least ", max_price)
+
+        best_offer = self.env['estate.property'].browse(vals['property_id']).best_offer
+        if vals['price'] < best_offer:
+            raise ValidationError(f"Offer need to be at least {best_offer}")
 
         self.env['estate.property'].browse(vals['property_id']).state = 'option2'
         return super(PropertyOffers, self).create(vals)
