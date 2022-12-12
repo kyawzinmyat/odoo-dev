@@ -1,1 +1,1 @@
-from . import estate
+from . import estate, inherited_model

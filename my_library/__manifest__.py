@@ -2,12 +2,11 @@
     'name' : 'My Library',
     'depends' : ["base"],
     'summary': "Manage books easily",
-    'description': """
-        Manage Library
-        ==============
-        Description related to library.
-        """,
     'author': "Kyaw Zin Myat",
-    'data': [],
+    'data': [
+        'views/library_book.xml',
+        'security/groups.xml',
+        'security/ir.model.access.csv',
+    ],
     'version': '1.0.0',
 }
