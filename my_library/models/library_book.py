@@ -29,3 +29,5 @@ class LibraryBook(models.Model):
                     digits=(14, 4), # Optional precision decimals,
                     )
     short_name = fields.Char('Short Title', required=True)
+    cost_price = fields.Float('Book Cost', digits = 'Book Price') 
+    currency_id = fields.Many2one('res.currency', string='Currency')
