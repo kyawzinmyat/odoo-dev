@@ -301,6 +301,7 @@
         </field>
     </record>
 
+
     <!-- view for Users-->
     <record id="res_users_view_form" model="ir.ui.view">
         <field name="name">res.users.view.form.inherit.gamification</field>
