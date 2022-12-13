@@ -19,6 +19,7 @@
                         <field name="name" />
                         <field name="author_ids" widget="many2many_
                         tags" />
+                        
                         <field name="state" />
                         <field name="pages" />
                         <field name="notes" />
@@ -34,6 +35,9 @@
                     <group>
                         <field name="description"/>
                         <field name="cost_price"/>
+                        <field name = "retail_price"></field>
+                        <field name = "currency_id"/>
+                        <field name = "age_days"/>
                     </group>
                 </group>
             </form>
