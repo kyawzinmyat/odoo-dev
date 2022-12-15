@@ -14,13 +14,23 @@
         <field name="model">library.book</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="make_available" string="Make Available"
+                    type="object"/>
+                    <button name="make_borrowed" string="Make Borrowed"
+                    type="object"/>
+                    <button name="make_lost" string="Make Lost"
+                    type="object"/>
+                    <button name="log_all_library_members"  string="Log
+Members" type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
                 <group>
                     <group>
                         <field name="name" />
                         <field name="author_ids" widget="many2many_
                         tags" />
-                        
-                        <field name="state" />
+                        <field name="publisher_city"/>
                         <field name="pages" />
                         <field name="notes" />
                     </group>
@@ -38,6 +48,10 @@
                         <field name = "retail_price"></field>
                         <field name = "currency_id"/>
                         <field name = "age_days"/>
+                    </group>
+
+                    <group>
+                        <field name="state"></field>
                     </group>
                 </group>
             </form>
